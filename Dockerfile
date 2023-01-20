@@ -14,7 +14,6 @@ RUN \
 	&& apt-get -y install nano \
 	&& apt-get -y install apache2 \
 	&& apt-get -y install proftpd \
-	##&& apt-get -y install proftpd-mod-crypto \
 	&& apt-get -y install openssl \
 	&& apt-get -y install ssh \
 	&& apt-get -y install git
@@ -31,9 +30,9 @@ COPY ssh/sshd_config /
 
 # Comandos para cargar configuracion http
 RUN \
-	mkdir /var/www/html/sitioweb1 /var/www/html/sitioweb2 \
-	&& mv /index1.html /var/www/html/sitioweb1/index.html \
-	&& mv /index2.html /var/www/html/sitioweb2/index.html \
+	mkdir /var/www/html/sitio1 /var/www/html/sitio2 \
+	&& mv /index1.html /var/www/html/sitio1/index.html \
+	&& mv /index2.html /var/www/html/sitio2/index.html \
 	&& mv /sitio1.conf /etc/apache2/sites-available \
 	&& a2ensite sitio1.conf \
 	&& mv /sitio2.conf /etc/apache2/sites-available \
@@ -46,14 +45,13 @@ RUN \
 # Comandos para cargar configuracion ftp
 RUN \
 	mv /proftpd.conf /etc/proftpd/proftpd.conf \
-	#&& mv /modules.conf /etc/proftpd/modules.conf \
 	&& mv /tls.conf /etc/proftpd/tls.conf \
 	&& mv /proftpd.crt /etc/ssl/certs/proftpd.crt \
 	&& mv /proftpd.key /etc/ssl/private/proftpd.key
 
 # Comandos para crear usuarios 
-RUN useradd alberto1 -m -d /var/www/html/sitioweb1 -p $(openssl passwd -1 1234) -s /usr/sbin/nologin
-RUN useradd alberto2 -m -d /var/www/html/sitioweb2 -p $(openssl passwd -1 1234) \
+RUN useradd alberto1 -m -d /var/www/html/sitio1 -p $(openssl passwd -1 1234) -s /usr/sbin/nologin
+RUN useradd alberto2 -m -d /var/www/html/sitio2 -p $(openssl passwd -1 1234) \
 	&& echo "alberto2" >> /etc/ftpusers 
 
 # Comandos para cargar contenido de git con deploy key
